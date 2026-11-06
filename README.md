@@ -74,21 +74,17 @@ Unlike traditional cloud-based notes applications that require account creation,
 
 ```mermaid
 flowchart LR
-    A[User Types Keystroke] -->|0ms Latency| B[Browser Memory / DOM]
-    B -->|Synchronous| C[(Client localStorage)]
-    B -->|User Requests Export| D[In-Memory Blob / PDF Print API]
-    B -->|User Generates Link| E[Client URL Hash #note=...]
-    
-    subgraph Privacy Perimeter [100% Client-Side Sandbox]
-        B
-        C
-        D
-        E
+    subgraph ClientSandbox ["100% Client-Side Sandbox"]
+        direction TB
+        A["User Types Keystroke"] -->|"0ms Latency"| B["Browser Memory & DOM"]
+        B -->|"Synchronous"| C[("Client localStorage")]
+        B -->|"Export Request"| D["In-Memory Blob / PDF Engine"]
+        B -->|"Hash Share"| E["Client URL Hash (#note=...)"]
     end
-    
-    Privacy Perimeter -.->|Blocked / Zero Transmissions| F[External Cloud Servers]
-    
-    style Privacy Perimeter fill:#B9E4E8,stroke:#167D8D,stroke-width:2px,color:#071B2B
+
+    B -.->|"Blocked / Zero Transmissions"| F["External Cloud Servers"]
+
+    style ClientSandbox fill:#B9E4E8,stroke:#167D8D,stroke-width:2px,color:#071B2B
     style F fill:#EEEEEE,stroke:#888,stroke-width:1px,stroke-dasharray: 5 5,color:#666
 ```
 
