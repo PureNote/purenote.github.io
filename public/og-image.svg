@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#071B2B" />
+  <rect x="28" y="28" width="1144" height="574" rx="32" fill="#0C293F" stroke="#167D8D" stroke-width="6" />
+  <rect x="80" y="90" width="110" height="110" rx="24" fill="#167D8D" stroke="#B9E4E8" stroke-width="4" />
+  <path d="M148 112H116C111.582 112 108 115.582 108 120V172C108 176.418 111.582 180 116 180H156C160.418 180 164 176.418 164 172V128L148 112Z" fill="#071B2B" stroke="#B9E4E8" stroke-width="4" stroke-linejoin="round" />
+  <line x1="120" y1="146" x2="152" y2="146" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" />
+  <line x1="120" y1="160" x2="142" y2="160" stroke="#B9E4E8" stroke-width="4" stroke-linecap="round" />
+  <text x="215" y="145" fill="#FFFFFF" font-family="Inter, system-ui, sans-serif" font-size="54" font-weight="900">PureNote</text>
+  <text x="215" y="185" fill="#B9E4E8" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700">100% Local Browser Execution • Zero Cloud Upload</text>
+  <text x="80" y="300" fill="#FFFFFF" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="900">Free Online Notepad</text>
+  <text x="80" y="365" fill="#B9E4E8" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="600">No Login • 0ms Auto-Save • Word Counter • Notepad to PDF &amp; Draw</text>
+  <rect x="80" y="435" width="290" height="68" rx="18" fill="#167D8D" />
+  <text x="225" y="478" text-anchor="middle" fill="#FFFFFF" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="800">✓ Instant Auto-Save</text>
+  <rect x="395" y="435" width="290" height="68" rx="18" fill="#B9E4E8" />
+  <text x="540" y="478" text-anchor="middle" fill="#071B2B" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="800">✓ Notepad to PDF</text>
+  <rect x="710" y="435" width="340" height="68" rx="18" fill="#0F324D" stroke="#167D8D" stroke-width="3" />
+  <text x="880" y="478" text-anchor="middle" fill="#EEEEEE" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="800">purenote.github.io</text>
+</svg>

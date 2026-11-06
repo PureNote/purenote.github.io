@@ -1,0 +1,1710 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section
+  aria-label={t('hero.h1')}
+  class="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-7xl flex-col justify-between px-2.5 py-2 sm:px-6 sm:py-3 lg:px-8"
+>
+  <!-- Compact First-Fold Header Bar: H1 + Creative Tools & Modes Collapse Toggle Button -->
+  <div class="mb-2 flex flex-wrap items-center justify-between gap-2 px-1 no-print">
+    <div class="flex items-center gap-2.5">
+      <span
+        class="hidden sm:inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#B9E4E8] dark:bg-[#167D8D] text-[#071B2B] dark:text-[#FFFFFF] border-2 border-[#167D8D] shadow-sm"
+        aria-hidden="true"
+      >
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+        </svg>
+      </span>
+      <h1 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-[#071B2B] dark:text-[#EEEEEE] leading-tight">
+        {t('hero.h1')}
+      </h1>
+    </div>
+
+    <!-- Creative Expand / Collapse Tools & Modes Arrow Button -->
+    <button
+      type="button"
+      id="btn-toggle-workspace-tools"
+      aria-expanded="false"
+      aria-controls="workspace-collapsible-tray"
+      data-label-show={t('toolbar.toggleTools')}
+      data-label-hide={t('toolbar.hideTools')}
+      class="group inline-flex items-center gap-2.5 rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] shadow-sm hover:bg-[#167D8D] hover:text-[#FFFFFF] dark:hover:bg-[#167D8D] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#167D8D]"
+    >
+      <svg class="h-4 w-4 sm:h-5 sm:w-5 text-[#167D8D] dark:text-[#B9E4E8] group-hover:text-[#FFFFFF] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" y1="21" x2="4" y2="14"></line>
+        <line x1="4" y1="10" x2="4" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12" y2="3"></line>
+        <line x1="20" y1="21" x2="20" y2="16"></line>
+        <line x1="20" y1="12" x2="20" y2="3"></line>
+        <line x1="1" y1="14" x2="7" y2="14"></line>
+        <line x1="9" y1="8" x2="15" y2="8"></line>
+        <line x1="17" y1="16" x2="23" y2="16"></line>
+      </svg>
+      <span id="workspace-tools-toggle-label">{t('toolbar.toggleTools')}</span>
+      <span
+        id="workspace-tools-chevron-wrap"
+        class="flex h-6 w-6 items-center justify-center rounded-full bg-[#B9E4E8] dark:bg-[#167D8D] text-[#071B2B] dark:text-[#FFFFFF] group-hover:bg-[#071B2B] group-hover:text-[#B9E4E8] transition-all duration-200"
+      >
+        <svg
+          id="workspace-tools-chevron"
+          class="h-4 w-4 transition-transform duration-300"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </span>
+    </button>
+  </div>
+
+  <!-- INTERACTIVE NOTEPAD BOX DIV (Main First-Fold Workspace) -->
+  <div
+    id="purenote-workspace-box"
+    data-default-tab-prefix={t('toolbar.defaultTabPrefix')}
+    data-copied-text={t('toolbar.copied')}
+    data-share-copied-text={t('toolbar.shareCopied')}
+    data-shared-loaded-text={t('editor.sharedNoteLoaded')}
+    data-clear-confirm={t('toolbar.clearConfirm')}
+    data-min-read={t('metrics.minRead')}
+    data-sec-read={t('metrics.secRead')}
+    data-empty-preview={t('editor.emptyNotePreview')}
+    data-duplicate-label={t('editor.duplicateNote')}
+    class="flex flex-1 flex-col rounded-3xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0F324D] p-2.5 sm:p-4 shadow-workspace dark:shadow-workspace-dark transition-colors duration-200"
+  >
+    <!-- COLLAPSIBLE FEATURES TRAY (Hidden on initial load for super-minimal Notepad view; expands smoothly on click) -->
+    <div id="workspace-collapsible-tray" class="hidden flex-col mb-3 animate-panel-enter no-print">
+      <!-- MODE SELECTOR PILLS -->
+      <div
+        role="tablist"
+        aria-label="Notepad Workspace Modes"
+        class="mb-2.5 flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1"
+      >
+        <!-- 1. Writing Notepad (Default) -->
+        <button
+          type="button"
+          role="tab"
+          aria-selected="true"
+          data-mode-btn="writing"
+          class="mode-pill-btn active-mode-pill group flex shrink-0 items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#167D8D] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] shadow-sm transition-all duration-150"
+        >
+          <svg class="h-5 w-5 sm:h-6 sm:w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>{t('mode.writing')}</span>
+        </button>
+
+        <!-- 2. Multi-Note Tabs -->
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-mode-btn="multitab"
+          class="mode-pill-btn group flex shrink-0 items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#B9E4E8]/60 dark:bg-[#0C293F] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-all duration-150"
+        >
+          <svg class="h-5 w-5 sm:h-6 sm:w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          <span>{t('mode.multiTab')}</span>
+          <span
+            id="mode-tab-count-badge"
+            class="ml-0.5 rounded-full bg-[#071B2B] text-[#B9E4E8] px-2 py-0.5 text-[11px] font-black"
+          >
+            1
+          </span>
+        </button>
+
+        <!-- 3. Notepad to PDF -->
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-mode-btn="pdf"
+          class="mode-pill-btn group flex shrink-0 items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#B9E4E8]/60 dark:bg-[#0C293F] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-all duration-150"
+        >
+          <svg class="h-5 w-5 sm:h-6 sm:w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <path d="M9 15h6"></path>
+            <path d="M12 12v6"></path>
+          </svg>
+          <span>{t('mode.pdf')}</span>
+        </button>
+
+        <!-- 4. Word Counter & Tools -->
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-mode-btn="tools"
+          class="mode-pill-btn group flex shrink-0 items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#B9E4E8]/60 dark:bg-[#0C293F] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-all duration-150"
+        >
+          <svg class="h-5 w-5 sm:h-6 sm:w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+            <line x1="9" y1="20" x2="15" y2="20"></line>
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+          </svg>
+          <span>{t('mode.wordCounter')}</span>
+        </button>
+
+        <!-- 5. Draw / Sketch Pad -->
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-mode-btn="draw"
+          class="mode-pill-btn group flex shrink-0 items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#B9E4E8]/60 dark:bg-[#0C293F] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-all duration-150"
+        >
+          <svg class="h-5 w-5 sm:h-6 sm:w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+            <path d="M2 2l7.586 7.586"></path>
+            <circle cx="11" cy="11" r="2"></circle>
+          </svg>
+          <span>{t('mode.draw')}</span>
+        </button>
+      </div>
+
+      <!-- STEP 1: TOP ACTION BAR + INSTANT MULTI-TAB BAR -->
+      <div class="flex flex-col gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#EEEEEE] dark:bg-[#0C293F] p-2 sm:p-2.5">
+        <!-- Row A: Multi-Note Tab Strip + Note Title Input -->
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <!-- Dynamic Tabs Container -->
+          <div
+            id="note-tabs-strip"
+            class="flex flex-1 items-center gap-1.5 overflow-x-auto pb-0.5"
+            role="tablist"
+            aria-label="Saved Browser Notes"
+          >
+            <!-- Populated dynamically by instant localStorage engine -->
+          </div>
+
+          <!-- + New Note Tab Button -->
+          <button
+            type="button"
+            id="btn-new-tab"
+            aria-label={t('toolbar.newTab')}
+            class="flex shrink-0 items-center gap-1.5 rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-3.5 py-1.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] shadow-sm hover:bg-[#071B2B] dark:hover:bg-[#B9E4E8] dark:hover:text-[#071B2B] transition-all"
+          >
+            <span>{t('toolbar.newTab')}</span>
+          </button>
+        </div>
+
+        <!-- Row B: Active Note Title + Oversized Action Toolbar (Font Size +/-, Copy All, Clear, Share Link, Open File) -->
+        <div class="flex flex-wrap items-center justify-between gap-2 border-t border-[#167D8D]/30 pt-2">
+          <!-- Editable Note Title -->
+          <div class="flex min-w-[180px] flex-1 items-center gap-2">
+            <svg class="h-5 w-5 shrink-0 text-[#167D8D] dark:text-[#B9E4E8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <input
+              type="text"
+              id="active-note-title"
+              placeholder={t('toolbar.noteTitlePlaceholder')}
+              aria-label={t('toolbar.noteTitlePlaceholder')}
+              class="w-full max-w-xs rounded-xl border-2 border-[#167D8D]/60 bg-[#FFFFFF] dark:bg-[#071B2B] px-3 py-1.5 text-sm sm:text-base font-extrabold text-[#071B2B] dark:text-[#EEEEEE] placeholder-[#167D8D]/70 focus:border-[#167D8D] focus:outline-none"
+            />
+          </div>
+
+          <!-- Action Buttons Group -->
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <!-- Font Size (- / +) Toggle (18px - 24px) -->
+            <div class="flex items-center rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#071B2B] p-0.5">
+              <button
+                type="button"
+                id="btn-font-decrease"
+                aria-label={t('toolbar.fontDecrease')}
+                title={t('toolbar.fontDecrease')}
+                class="flex h-9 w-9 items-center justify-center rounded-lg font-black text-sm text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#B9E4E8] dark:hover:bg-[#167D8D] transition-colors"
+              >
+                A-
+              </button>
+              <span
+                id="font-size-indicator"
+                class="px-2 text-xs font-extrabold text-[#167D8D] dark:text-[#B9E4E8]"
+              >
+                20px
+              </span>
+              <button
+                type="button"
+                id="btn-font-increase"
+                aria-label={t('toolbar.fontIncrease')}
+                title={t('toolbar.fontIncrease')}
+                class="flex h-9 w-9 items-center justify-center rounded-lg font-black text-base text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#B9E4E8] dark:hover:bg-[#167D8D] transition-colors"
+              >
+                A+
+              </button>
+            </div>
+
+            <!-- Open Local .TXT/.MD File -->
+            <label
+              for="import-file-input"
+              class="cursor-pointer flex h-10 items-center gap-1.5 rounded-xl border-2 border-[#167D8D] bg-[#B9E4E8]/60 dark:bg-[#071B2B] px-3 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors"
+            >
+              <svg class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span class="hidden sm:inline">{t('toolbar.importTxt')}</span>
+              <input id="import-file-input" type="file" accept=".txt,.md,.html,.csv,.json,.log" class="hidden" />
+            </label>
+
+            <!-- Copy All (Online Clipboard) -->
+            <button
+              type="button"
+              id="btn-copy-all"
+              aria-label={t('toolbar.copyAllAria')}
+              class="flex h-10 items-center gap-1.5 rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-3.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] hover:bg-[#071B2B] dark:hover:bg-[#B9E4E8] dark:hover:text-[#071B2B] transition-all"
+            >
+              <svg class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="copy-all-label">{t('toolbar.copyAll')}</span>
+            </button>
+
+            <!-- Share Link (#note=...) -->
+            <button
+              type="button"
+              id="btn-share-link"
+              aria-label={t('toolbar.shareLink')}
+              class="flex h-10 items-center gap-1.5 rounded-xl border-2 border-[#167D8D] bg-[#B9E4E8] dark:bg-[#167D8D] px-3.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#FFFFFF] hover:bg-[#071B2B] hover:text-[#FFFFFF] dark:hover:bg-[#B9E4E8] dark:hover:text-[#071B2B] transition-all"
+            >
+              <svg class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              <span id="share-link-label">{t('toolbar.shareLink')}</span>
+            </button>
+
+            <!-- Clear Note -->
+            <button
+              type="button"
+              id="btn-clear-note"
+              aria-label={t('toolbar.clear')}
+              class="flex h-10 items-center gap-1.5 rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#071B2B] px-3 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#071B2B] hover:text-[#FFFFFF] dark:hover:bg-[#167D8D] transition-all"
+            >
+              <svg class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span class="hidden sm:inline">{t('toolbar.clear')}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: MAIN EDITOR CANVAS & SPECIALIZED MODE PANELS -->
+    <div class="relative flex flex-1 flex-col min-h-[340px] sm:min-h-[420px]">
+      <!-- PANEL 1: WRITING NOTEPAD (Default Oversized Distraction-Free Textarea) -->
+      <div id="mode-panel-writing" class="flex flex-1 flex-col animate-panel-enter">
+        <textarea
+          id="purenote-textarea"
+          placeholder={t('editor.placeholder')}
+          aria-label={t('hero.h1')}
+          spellcheck="true"
+          style="font-size: 20px; line-height: 1.65;"
+          class="purenote-editor-textarea w-full flex-1 resize-none rounded-2xl bg-[#FFFFFF] dark:bg-[#071B2B] p-4 sm:p-6 font-sans text-[#071B2B] dark:text-[#EEEEEE] placeholder-[#167D8D]/70 dark:placeholder-[#B9E4E8]/60 shadow-inner"
+        ></textarea>
+      </div>
+
+      <!-- PANEL 2: MULTI-NOTE TABS MANAGER -->
+      <div id="mode-panel-multitab" class="hidden flex-1 flex-col rounded-2xl border-2 border-[#167D8D] bg-[#EEEEEE]/70 dark:bg-[#071B2B] p-4 sm:p-6 animate-panel-enter">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+              {t('mode.multiTab')}
+            </h2>
+            <p class="text-sm font-medium text-[#167D8D] dark:text-[#B9E4E8]">
+              {t('editor.tabManagerHint')}
+            </p>
+          </div>
+          <button
+            type="button"
+            id="btn-multitab-create"
+            class="flex items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#167D8D] px-4 py-2.5 text-sm font-extrabold text-[#FFFFFF] hover:bg-[#071B2B] dark:hover:bg-[#B9E4E8] dark:hover:text-[#071B2B] transition-all"
+          >
+            <span>{t('editor.createNewNoteCard')}</span>
+          </button>
+        </div>
+        <div id="multitab-cards-grid" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 overflow-y-auto max-h-[380px] pr-1">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- PANEL 3: NOTEPAD TO PDF STUDIO -->
+      <div id="mode-panel-pdf" class="hidden flex-1 flex-col rounded-2xl border-2 border-[#167D8D] bg-[#EEEEEE]/70 dark:bg-[#071B2B] p-4 sm:p-6 animate-panel-enter">
+        <div class="mb-4">
+          <h2 class="text-xl sm:text-2xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+            {t('pdf.title')}
+          </h2>
+          <p class="text-sm font-medium text-[#167D8D] dark:text-[#B9E4E8]">
+            {t('pdf.subtitle')}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="flex flex-col gap-3 rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-4">
+            <div>
+              <label for="pdf-doc-title" class="block text-xs font-extrabold uppercase tracking-wider text-[#167D8D] dark:text-[#B9E4E8] mb-1">
+                {t('pdf.docTitleLabel')}
+              </label>
+              <input
+                type="text"
+                id="pdf-doc-title"
+                placeholder={t('toolbar.noteTitlePlaceholder')}
+                class="w-full rounded-xl border-2 border-[#167D8D] bg-[#EEEEEE]/60 dark:bg-[#071B2B] px-3.5 py-2 text-base font-bold text-[#071B2B] dark:text-[#EEEEEE] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label for="pdf-font-family" class="block text-xs font-extrabold uppercase tracking-wider text-[#167D8D] dark:text-[#B9E4E8] mb-1">
+                {t('pdf.fontFamilyLabel')}
+              </label>
+              <select
+                id="pdf-font-family"
+                class="w-full rounded-xl border-2 border-[#167D8D] bg-[#EEEEEE]/60 dark:bg-[#071B2B] px-3.5 py-2 text-base font-bold text-[#071B2B] dark:text-[#EEEEEE] focus:outline-none"
+              >
+                <option value="sans">{t('pdf.fontSans')}</option>
+                <option value="serif">{t('pdf.fontSerif')}</option>
+                <option value="mono">{t('pdf.fontMono')}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-col justify-between gap-3 rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-4">
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 cursor-pointer text-sm sm:text-base font-bold text-[#071B2B] dark:text-[#EEEEEE]">
+                <input type="checkbox" id="pdf-opt-date" checked class="h-5 w-5 accent-[#167D8D] rounded" />
+                <span>{t('pdf.includeDate')}</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer text-sm sm:text-base font-bold text-[#071B2B] dark:text-[#EEEEEE]">
+                <input type="checkbox" id="pdf-opt-metrics" checked class="h-5 w-5 accent-[#167D8D] rounded" />
+                <span>{t('pdf.includeMetrics')}</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer text-sm sm:text-base font-bold text-[#071B2B] dark:text-[#EEEEEE]">
+                <input type="checkbox" id="pdf-opt-lines" class="h-5 w-5 accent-[#167D8D] rounded" />
+                <span>{t('pdf.includeLineNumbers')}</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer text-sm sm:text-base font-bold text-[#071B2B] dark:text-[#EEEEEE]">
+                <input type="checkbox" id="pdf-opt-sketch" class="h-5 w-5 accent-[#167D8D] rounded" />
+                <span>{t('pdf.includeSketch')}</span>
+              </label>
+            </div>
+
+            <button
+              type="button"
+              id="btn-pdf-studio-generate"
+              class="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#167D8D] px-5 py-3 text-base font-black text-[#FFFFFF] shadow-md hover:bg-[#071B2B] dark:hover:bg-[#B9E4E8] dark:hover:text-[#071B2B] transition-all"
+            >
+              <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>{t('pdf.printNowBtn')}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: WORD COUNTER & TEXT TOOLS -->
+      <div id="mode-panel-tools" class="hidden flex-1 flex-col rounded-2xl border-2 border-[#167D8D] bg-[#EEEEEE]/70 dark:bg-[#071B2B] p-4 sm:p-6 animate-panel-enter">
+        <h2 class="mb-3 text-xl sm:text-2xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+          {t('tools.title')}
+        </h2>
+
+        <!-- 1-Click Case & Line Transform Buttons -->
+        <div class="mb-4 flex flex-wrap gap-2">
+          <button type="button" data-transform="upper" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.uppercase')}
+          </button>
+          <button type="button" data-transform="lower" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.lowercase')}
+          </button>
+          <button type="button" data-transform="title" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.titleCase')}
+          </button>
+          <button type="button" data-transform="sentence" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.sentenceCase')}
+          </button>
+          <button type="button" data-transform="trim" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.trimSpaces')}
+          </button>
+          <button type="button" data-transform="blanklines" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.removeBlankLines')}
+          </button>
+          <button type="button" data-transform="sortaz" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.sortAz')}
+          </button>
+          <button type="button" data-transform="sortza" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.sortZa')}
+          </button>
+          <button type="button" data-transform="dedupe" class="text-tool-btn rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-3.5 py-2 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">
+            {t('tools.dedupeLines')}
+          </button>
+        </div>
+
+        <!-- Find and Replace Bar -->
+        <div class="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-3">
+          <input
+            type="text"
+            id="tool-find-input"
+            placeholder={t('tools.findPlaceholder')}
+            class="flex-1 min-w-[140px] rounded-xl border-2 border-[#167D8D]/60 bg-[#EEEEEE]/60 dark:bg-[#071B2B] px-3 py-1.5 text-sm font-bold text-[#071B2B] dark:text-[#EEEEEE] focus:outline-none"
+          />
+          <input
+            type="text"
+            id="tool-replace-input"
+            placeholder={t('tools.replacePlaceholder')}
+            class="flex-1 min-w-[140px] rounded-xl border-2 border-[#167D8D]/60 bg-[#EEEEEE]/60 dark:bg-[#071B2B] px-3 py-1.5 text-sm font-bold text-[#071B2B] dark:text-[#EEEEEE] focus:outline-none"
+          />
+          <button
+            type="button"
+            id="btn-tool-replace-all"
+            class="rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-4 py-1.5 text-sm font-extrabold text-[#FFFFFF] hover:bg-[#071B2B] transition-colors"
+          >
+            {t('tools.replaceAllBtn')}
+          </button>
+        </div>
+
+        <!-- Top Keywords Frequency Pills -->
+        <div class="rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-3.5">
+          <h3 class="mb-2 text-xs font-extrabold uppercase tracking-wider text-[#167D8D] dark:text-[#B9E4E8]">
+            {t('tools.densityTitle')}
+          </h3>
+          <div id="keyword-density-list" class="flex flex-wrap gap-2 text-sm font-bold text-[#071B2B] dark:text-[#EEEEEE]">
+            <span class="text-[#167D8D] dark:text-[#B9E4E8]">{t('tools.noKeywords')}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: QUICK SKETCH / NOTEPAD ONLINE DRAW CANVAS -->
+      <div id="mode-panel-draw" class="hidden flex-1 flex-col rounded-2xl border-2 border-[#167D8D] bg-[#EEEEEE]/70 dark:bg-[#071B2B] p-3 sm:p-4 animate-panel-enter">
+        <!-- Draw Toolbar -->
+        <div class="mb-2.5 flex flex-wrap items-center justify-between gap-2 rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Tool Type: Pen / Eraser -->
+            <button
+              type="button"
+              id="draw-tool-pen"
+              class="rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] transition-colors"
+            >
+              ✏️ {t('draw.pen')}
+            </button>
+            <button
+              type="button"
+              id="draw-tool-eraser"
+              class="rounded-xl border-2 border-[#167D8D] bg-[#B9E4E8]/50 dark:bg-[#071B2B] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] transition-colors"
+            >
+              🧽 {t('draw.eraser')}
+            </button>
+
+            <!-- Color Swatches -->
+            <div class="flex items-center gap-1.5 px-1" role="group" aria-label="Brush Color">
+              <button type="button" data-draw-color="#071B2B" aria-label="Deep Navy" class="draw-color-swatch h-7 w-7 rounded-full border-2 border-[#167D8D] bg-[#071B2B] ring-2 ring-[#167D8D]"></button>
+              <button type="button" data-draw-color="#167D8D" aria-label="Oceanic Teal" class="draw-color-swatch h-7 w-7 rounded-full border-2 border-[#FFFFFF] bg-[#167D8D]"></button>
+              <button type="button" data-draw-color="#E11D48" aria-label="Crimson Red" class="draw-color-swatch h-7 w-7 rounded-full border-2 border-[#FFFFFF] bg-[#E11D48]"></button>
+              <button type="button" data-draw-color="#16A34A" aria-label="Emerald Green" class="draw-color-swatch h-7 w-7 rounded-full border-2 border-[#FFFFFF] bg-[#16A34A]"></button>
+              <button type="button" data-draw-color="#D97706" aria-label="Amber Gold" class="draw-color-swatch h-7 w-7 rounded-full border-2 border-[#FFFFFF] bg-[#D97706]"></button>
+            </div>
+
+            <!-- Brush Size -->
+            <div class="flex items-center gap-1.5 text-xs font-extrabold text-[#071B2B] dark:text-[#EEEEEE]">
+              <label for="draw-size-slider">{t('draw.size')}:</label>
+              <input id="draw-size-slider" type="range" min="2" max="24" value="4" class="w-20 accent-[#167D8D]" />
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <button
+              type="button"
+              id="draw-btn-undo"
+              class="rounded-xl border-2 border-[#167D8D] bg-[#B9E4E8]/60 dark:bg-[#071B2B] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors"
+            >
+              ↶ {t('draw.undo')}
+            </button>
+            <button
+              type="button"
+              id="draw-btn-clear"
+              class="rounded-xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#071B2B] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#071B2B] hover:text-[#FFFFFF] transition-colors"
+            >
+              {t('draw.clearCanvas')}
+            </button>
+            <button
+              type="button"
+              id="draw-btn-download"
+              class="rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-3.5 py-1.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] hover:bg-[#071B2B] transition-colors"
+            >
+              ⬇ {t('draw.downloadPng')}
+            </button>
+          </div>
+        </div>
+
+        <!-- HTML5 Sketch Canvas -->
+        <div class="relative flex-1 min-h-[280px] rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] overflow-hidden shadow-inner">
+          <canvas id="purenote-draw-canvas" class="h-full w-full cursor-crosshair touch-none block"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: ULTRA-MINIMAL BOTTOM-RIGHT EXPORT BUTTON (Popup includes Live Word Count Details + Export Formats) -->
+    <div class="mt-2 flex items-center justify-end no-print">
+      <!-- Right: Compact Export / Save Button with Word Count + Format Selector Popover -->
+      <div class="relative" id="export-dropdown-wrapper">
+        <button
+          type="button"
+          id="btn-export-menu-toggle"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="export-format-menu"
+          class="group inline-flex h-10 items-center gap-2 rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-3.5 text-xs sm:text-sm font-black text-[#FFFFFF] shadow-sm hover:bg-[#071B2B] dark:hover:bg-[#B9E4E8] dark:hover:text-[#071B2B] transition-all focus:outline-none focus:ring-2 focus:ring-[#167D8D]"
+        >
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>{t('export.menuBtn')}</span>
+          <svg
+            id="export-menu-chevron"
+            class="h-3.5 w-3.5 transition-transform duration-200"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+        </button>
+
+        <!-- Popover Menu: Live Word Count Summary + Export Formats -->
+        <div
+          id="export-format-menu"
+          role="menu"
+          aria-label={t('export.menuBtn')}
+          class="hidden absolute bottom-full right-0 mb-2.5 w-72 max-w-[calc(100vw-2.5rem)] origin-bottom-right rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-2.5 shadow-2xl z-50 animate-panel-enter"
+        >
+          <!-- Live Word Count & Reading Details Grid Inside Popover -->
+          <div
+            role="status"
+            aria-live="polite"
+            aria-label="Live Word and Character Counter"
+            class="mb-2.5 grid grid-cols-2 gap-1.5 rounded-xl border border-[#167D8D]/40 bg-[#B9E4E8]/45 dark:bg-[#071B2B] p-2 text-[11px] font-extrabold text-[#071B2B] dark:text-[#EEEEEE]"
+          >
+            <div class="flex items-center justify-between rounded-lg bg-[#FFFFFF] dark:bg-[#0C293F] px-2 py-1">
+              <span class="text-[#167D8D] dark:text-[#B9E4E8]">{t('metrics.words')}</span>
+              <span id="metric-words" class="font-black">0</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-[#FFFFFF] dark:bg-[#0C293F] px-2 py-1">
+              <span class="text-[#167D8D] dark:text-[#B9E4E8]">{t('metrics.characters')}</span>
+              <span id="metric-chars" class="font-black">0</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-[#FFFFFF] dark:bg-[#0C293F] px-2 py-1">
+              <span class="text-[#167D8D] dark:text-[#B9E4E8]">{t('metrics.lines')}</span>
+              <span id="metric-lines" class="font-black">1</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-[#FFFFFF] dark:bg-[#0C293F] px-2 py-1">
+              <span class="text-[#167D8D] dark:text-[#B9E4E8] truncate mr-1">{t('metrics.readingTime')}</span>
+              <span id="metric-reading-time" class="font-black shrink-0">0s</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <!-- 1. Download .TXT -->
+            <button
+              type="button"
+              id="btn-export-txt"
+              role="menuitem"
+              aria-label={t('export.txt')}
+              class="flex w-full items-center justify-between rounded-xl border border-transparent px-3 py-2 text-left text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:border-[#167D8D] hover:bg-[#B9E4E8]/60 dark:hover:bg-[#167D8D] dark:hover:text-[#FFFFFF] transition-colors"
+            >
+              <span class="flex items-center gap-2.5 truncate">
+                <svg class="h-4 w-4 shrink-0 text-[#167D8D] dark:text-[#B9E4E8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span class="truncate">{t('export.txt')}</span>
+              </span>
+              <span class="ml-2 rounded-md bg-[#071B2B] px-2 py-0.5 text-[11px] font-black text-[#B9E4E8]">.TXT</span>
+            </button>
+
+            <!-- 2. Save as PDF (Notepad to PDF) -->
+            <button
+              type="button"
+              id="btn-export-pdf"
+              role="menuitem"
+              aria-label={t('export.pdf')}
+              class="flex w-full items-center justify-between rounded-xl border border-transparent px-3 py-2 text-left text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:border-[#167D8D] hover:bg-[#B9E4E8]/60 dark:hover:bg-[#167D8D] dark:hover:text-[#FFFFFF] transition-colors"
+            >
+              <span class="flex items-center gap-2.5 truncate">
+                <svg class="h-4 w-4 shrink-0 text-[#167D8D] dark:text-[#B9E4E8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                <span class="truncate">{t('export.pdf')}</span>
+              </span>
+              <span class="ml-2 rounded-md bg-[#167D8D] px-2 py-0.5 text-[11px] font-black text-[#FFFFFF]">.PDF</span>
+            </button>
+
+            <!-- 3. Export .HTML -->
+            <button
+              type="button"
+              id="btn-export-html"
+              role="menuitem"
+              aria-label={t('export.html')}
+              class="flex w-full items-center justify-between rounded-xl border border-transparent px-3 py-2 text-left text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:border-[#167D8D] hover:bg-[#B9E4E8]/60 dark:hover:bg-[#167D8D] dark:hover:text-[#FFFFFF] transition-colors"
+            >
+              <span class="flex items-center gap-2.5 truncate">
+                <svg class="h-4 w-4 shrink-0 text-[#167D8D] dark:text-[#B9E4E8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="truncate">{t('export.html')}</span>
+              </span>
+              <span class="ml-2 rounded-md bg-[#071B2B] px-2 py-0.5 text-[11px] font-black text-[#B9E4E8]">.HTML</span>
+            </button>
+
+            <!-- 4. Export .MD -->
+            <button
+              type="button"
+              id="btn-export-md"
+              role="menuitem"
+              aria-label={t('export.md')}
+              class="flex w-full items-center justify-between rounded-xl border border-transparent px-3 py-2 text-left text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:border-[#167D8D] hover:bg-[#B9E4E8]/60 dark:hover:bg-[#167D8D] dark:hover:text-[#FFFFFF] transition-colors"
+            >
+              <span class="flex items-center gap-2.5 truncate">
+                <svg class="h-4 w-4 shrink-0 text-[#167D8D] dark:text-[#B9E4E8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+                <span class="truncate">{t('export.md')}</span>
+              </span>
+              <span class="ml-2 rounded-md bg-[#071B2B] px-2 py-0.5 text-[11px] font-black text-[#B9E4E8]">.MD</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification for Instant User Feedback -->
+  <div
+    id="purenote-toast"
+    role="status"
+    aria-live="polite"
+    class="pointer-events-none fixed bottom-6 right-6 z-50 hidden rounded-2xl border-2 border-[#167D8D] bg-[#071B2B] px-5 py-3 text-sm font-extrabold text-[#B9E4E8] shadow-2xl transition-all duration-200"
+  >
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const STORAGE_KEY_TABS = 'purenote_tabs_v1';
+    const STORAGE_KEY_ACTIVE = 'purenote_active_tab_v1';
+    const STORAGE_KEY_FONT = 'purenote_font_size_v1';
+    const STORAGE_KEY_CANVAS = 'purenote_canvas_v1';
+
+    const workspaceBox = document.getElementById('purenote-workspace-box');
+    if (!workspaceBox) return;
+
+    const defaultTabPrefix = workspaceBox.getAttribute('data-default-tab-prefix') || 'Note';
+    const copiedText = workspaceBox.getAttribute('data-copied-text') || '✓ Copied!';
+    const shareCopiedText = workspaceBox.getAttribute('data-share-copied-text') || '✓ Share Link Copied!';
+    const sharedLoadedText = workspaceBox.getAttribute('data-shared-loaded-text') || '✓ Loaded shared note!';
+    const clearConfirmText = workspaceBox.getAttribute('data-clear-confirm') || 'Clear current note?';
+    const minReadLabel = workspaceBox.getAttribute('data-min-read') || 'min read';
+    const secReadLabel = workspaceBox.getAttribute('data-sec-read') || 'sec read';
+    const emptyPreviewLabel = workspaceBox.getAttribute('data-empty-preview') || '(Empty note)';
+    const duplicateLabel = workspaceBox.getAttribute('data-duplicate-label') || 'Duplicate';
+
+    const textarea = document.getElementById('purenote-textarea');
+    const titleInput = document.getElementById('active-note-title');
+    const pdfTitleInput = document.getElementById('pdf-doc-title');
+    const tabsStrip = document.getElementById('note-tabs-strip');
+    const tabCountBadge = document.getElementById('mode-tab-count-badge');
+    const multiTabGrid = document.getElementById('multitab-cards-grid');
+
+    const metricWords = document.getElementById('metric-words');
+    const metricChars = document.getElementById('metric-chars');
+    const metricLines = document.getElementById('metric-lines');
+    const metricReading = document.getElementById('metric-reading-time');
+    const keywordList = document.getElementById('keyword-density-list');
+
+    const toastEl = document.getElementById('purenote-toast');
+    let toastTimeout = null;
+
+    function showToast(msg) {
+      if (!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.remove('hidden');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.add('hidden');
+      }, 3200);
+    }
+
+    window.addEventListener('purenote:toast', (e) => {
+      if (e.detail && e.detail.message) showToast(e.detail.message);
+    });
+
+    // UTF-8 safe Base64 URL encoding/decoding for #note=... zero-server sharing
+    function encodeNoteToHash(obj) {
+      try {
+        const json = JSON.stringify(obj);
+        const bytes = new TextEncoder().encode(json);
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function decodeNoteFromHash(encoded) {
+      try {
+        let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) base64 += '=';
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const json = new TextDecoder().decode(bytes);
+        return JSON.parse(json);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // State initialization
+    let tabs = [];
+    let activeTabId = '';
+    let fontSize = 20;
+
+    function createDefaultTab(index) {
+      return {
+        id: 'note_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        title: defaultTabPrefix + ' ' + index,
+        content: '',
+        updatedAt: Date.now(),
+      };
+    }
+
+    function loadFromStorage() {
+      try {
+        const rawTabs = localStorage.getItem(STORAGE_KEY_TABS);
+        if (rawTabs) {
+          const parsed = JSON.parse(rawTabs);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            tabs = parsed;
+          }
+        }
+        const savedActive = localStorage.getItem(STORAGE_KEY_ACTIVE);
+        if (savedActive && tabs.some((t) => t.id === savedActive)) {
+          activeTabId = savedActive;
+        }
+        const savedFont = Number(localStorage.getItem(STORAGE_KEY_FONT));
+        if (savedFont >= 16 && savedFont <= 28) {
+          fontSize = savedFont;
+        }
+      } catch (e) {}
+
+      if (tabs.length === 0) {
+        const first = createDefaultTab(1);
+        tabs = [first];
+        activeTabId = first.id;
+      } else if (!activeTabId) {
+        activeTabId = tabs[0].id;
+      }
+
+      // Check URL hash #note=...
+      if (window.location.hash && window.location.hash.startsWith('#note=')) {
+        const encoded = window.location.hash.slice(6);
+        const shared = decodeNoteFromHash(encoded);
+        if (shared && typeof shared.c === 'string') {
+          const sharedTab = {
+            id: 'note_shared_' + Date.now(),
+            title: shared.t || defaultTabPrefix + ' (Shared)',
+            content: shared.c,
+            updatedAt: Date.now(),
+          };
+          tabs.unshift(sharedTab);
+          activeTabId = sharedTab.id;
+          saveToStorage();
+          setTimeout(() => showToast(sharedLoadedText), 250);
+        }
+      }
+    }
+
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY_TABS, JSON.stringify(tabs));
+        localStorage.setItem(STORAGE_KEY_ACTIVE, activeTabId);
+      } catch (e) {}
+    }
+
+    function getActiveTab() {
+      return tabs.find((t) => t.id === activeTabId) || tabs[0];
+    }
+
+    // Live Metrics Computation
+    function updateMetrics(text) {
+      const trimmed = text.trim();
+      const wordsArray = trimmed ? trimmed.split(/\s+/).filter(Boolean) : [];
+      const wordCount = wordsArray.length;
+      const charCount = text.length;
+      const lineCount = text.length === 0 ? 1 : text.split(/\r\n|\r|\n/).length;
+
+      if (metricWords) metricWords.textContent = wordCount.toLocaleString();
+      if (metricChars) metricChars.textContent = charCount.toLocaleString();
+      if (metricLines) metricLines.textContent = lineCount.toLocaleString();
+
+      let shortReadingText = '0s';
+      if (wordCount > 0) {
+        const totalSeconds = Math.ceil((wordCount / 200) * 60);
+        if (totalSeconds < 60) {
+          shortReadingText = totalSeconds + 's';
+        } else {
+          const mins = Math.ceil(wordCount / 200);
+          shortReadingText = mins + 'm';
+        }
+      }
+
+      if (metricReading) metricReading.textContent = shortReadingText;
+
+      // Update keyword frequency in Word Counter & Tools panel
+      if (keywordList && wordsArray.length > 0) {
+        const freq = {};
+        wordsArray.forEach((w) => {
+          const clean = w.toLowerCase().replace(/[^\p{L}\p{N}_-]+/gu, '');
+          if (clean.length >= 3) {
+            freq[clean] = (freq[clean] || 0) + 1;
+          }
+        });
+        const top = Object.entries(freq)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 8);
+        if (top.length > 0) {
+          keywordList.innerHTML = top
+            .map(
+              ([word, count]) =>
+                `<span class="inline-flex items-center gap-1.5 rounded-xl border border-[#167D8D] bg-[#B9E4E8]/50 dark:bg-[#071B2B] px-3 py-1 text-xs font-extrabold"><span>${word}</span><span class="rounded-md bg-[#167D8D] px-1.5 py-0.5 text-[11px] text-[#FFFFFF]">${count}×</span></span>`
+            )
+            .join('');
+        }
+      }
+    }
+
+    // Render Multi-Tab Strip & Multi-Tab Grid
+    function renderTabs() {
+      const current = getActiveTab();
+      if (tabCountBadge) tabCountBadge.textContent = String(tabs.length);
+
+      if (tabsStrip) {
+        tabsStrip.innerHTML = '';
+        tabs.forEach((tab) => {
+          const isAct = tab.id === current.id;
+          const btn = document.createElement('div');
+          btn.setAttribute('role', 'tab');
+          btn.setAttribute('aria-selected', String(isAct));
+          btn.className = isAct
+            ? 'flex shrink-0 items-center gap-2 rounded-xl border-2 border-[#071B2B] dark:border-[#B9E4E8] bg-[#071B2B] dark:bg-[#167D8D] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] cursor-pointer shadow-sm transition-all'
+            : 'flex shrink-0 items-center gap-2 rounded-xl border-2 border-[#167D8D]/60 bg-[#FFFFFF] dark:bg-[#071B2B] px-3 py-1.5 text-xs sm:text-sm font-bold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#B9E4E8] dark:hover:bg-[#167D8D]/50 cursor-pointer transition-all';
+
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'max-w-[130px] truncate';
+          titleSpan.textContent = tab.title || defaultTabPrefix;
+          btn.appendChild(titleSpan);
+
+          if (tabs.length > 1) {
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.className = 'ml-1 rounded-md px-1 hover:bg-[#167D8D] hover:text-[#FFFFFF] text-xs font-black';
+            closeBtn.textContent = '×';
+            closeBtn.setAttribute('aria-label', 'Close ' + tab.title);
+            closeBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              deleteTab(tab.id);
+            });
+            btn.appendChild(closeBtn);
+          }
+
+          btn.addEventListener('click', () => {
+            switchTab(tab.id);
+          });
+
+          tabsStrip.appendChild(btn);
+        });
+      }
+
+      if (multiTabGrid) {
+        multiTabGrid.innerHTML = '';
+        tabs.forEach((tab) => {
+          const isAct = tab.id === current.id;
+          const card = document.createElement('div');
+          card.className = isAct
+            ? 'flex flex-col justify-between rounded-2xl border-2 border-[#071B2B] dark:border-[#B9E4E8] bg-[#B9E4E8]/70 dark:bg-[#167D8D]/40 p-4 shadow-md'
+            : 'flex flex-col justify-between rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-4 hover:border-[#071B2B] transition-all';
+
+          const words = tab.content.trim() ? tab.content.trim().split(/\s+/).filter(Boolean).length : 0;
+          const preview = tab.content.trim() ? tab.content.trim().slice(0, 100) : emptyPreviewLabel;
+
+          card.innerHTML = `
+            <div class="cursor-pointer" data-card-select="${tab.id}">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <h3 class="font-black text-base text-[#071B2B] dark:text-[#EEEEEE] truncate">${ (tab.title || defaultTabPrefix).replace(/</g, '&lt;') }</h3>
+                <span class="rounded-lg bg-[#167D8D] px-2 py-0.5 text-xs font-extrabold text-[#FFFFFF]">${words} w</span>
+              </div>
+              <p class="text-xs font-medium text-[#071B2B]/80 dark:text-[#EEEEEE]/80 line-clamp-2 mb-3">${preview.replace(/</g, '&lt;')}</p>
+            </div>
+            <div class="flex items-center justify-between gap-2 border-t border-[#167D8D]/30 pt-2">
+              <button type="button" data-card-dup="${tab.id}" class="rounded-lg border border-[#167D8D] bg-[#FFFFFF] dark:bg-[#071B2B] px-2.5 py-1 text-xs font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-colors">${duplicateLabel}</button>
+              ${tabs.length > 1 ? `<button type="button" data-card-del="${tab.id}" class="rounded-lg border border-[#167D8D] bg-[#FFFFFF] dark:bg-[#071B2B] px-2.5 py-1 text-xs font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#071B2B] hover:text-[#FFFFFF] transition-colors">×</button>` : ''}
+            </div>
+          `;
+
+          card.querySelector(`[data-card-select="${tab.id}"]`)?.addEventListener('click', () => {
+            switchTab(tab.id);
+            activateMode('writing');
+          });
+
+          card.querySelector(`[data-card-dup="${tab.id}"]`)?.addEventListener('click', () => {
+            const copy = {
+              id: 'note_' + Date.now(),
+              title: tab.title + ' (Copy)',
+              content: tab.content,
+              updatedAt: Date.now(),
+            };
+            tabs.push(copy);
+            activeTabId = copy.id;
+            saveToStorage();
+            syncEditorWithActiveTab();
+          });
+
+          card.querySelector(`[data-card-del="${tab.id}"]`)?.addEventListener('click', () => {
+            deleteTab(tab.id);
+          });
+
+          multiTabGrid.appendChild(card);
+        });
+      }
+    }
+
+    function syncEditorWithActiveTab() {
+      const current = getActiveTab();
+      if (!current) return;
+      if (textarea) textarea.value = current.content;
+      if (titleInput) titleInput.value = current.title;
+      if (pdfTitleInput) pdfTitleInput.value = current.title;
+      updateMetrics(current.content);
+      renderTabs();
+    }
+
+    function switchTab(id) {
+      activeTabId = id;
+      saveToStorage();
+      syncEditorWithActiveTab();
+    }
+
+    function createNewTab() {
+      const nextNum = tabs.length + 1;
+      const newTab = createDefaultTab(nextNum);
+      tabs.push(newTab);
+      activeTabId = newTab.id;
+      saveToStorage();
+      syncEditorWithActiveTab();
+      activateMode('writing');
+      if (textarea) textarea.focus();
+    }
+
+    function deleteTab(id) {
+      if (tabs.length <= 1) return;
+      const idx = tabs.findIndex((t) => t.id === id);
+      if (idx === -1) return;
+      tabs.splice(idx, 1);
+      if (activeTabId === id) {
+        const nextTab = tabs[Math.max(0, idx - 1)];
+        activeTabId = nextTab.id;
+      }
+      saveToStorage();
+      syncEditorWithActiveTab();
+    }
+
+    // Font Size Control (18px - 24px)
+    const fontIndicator = document.getElementById('font-size-indicator');
+    function applyFontSize() {
+      if (textarea) textarea.style.fontSize = fontSize + 'px';
+      if (fontIndicator) fontIndicator.textContent = fontSize + 'px';
+      try {
+        localStorage.setItem(STORAGE_KEY_FONT, String(fontSize));
+      } catch (e) {}
+    }
+
+    document.getElementById('btn-font-decrease')?.addEventListener('click', () => {
+      fontSize = Math.max(16, fontSize - 2);
+      applyFontSize();
+    });
+
+    document.getElementById('btn-font-increase')?.addEventListener('click', () => {
+      fontSize = Math.min(28, fontSize + 2);
+      applyFontSize();
+    });
+
+    // Real-Time 0ms Auto-Save on Every Keystroke
+    textarea?.addEventListener('input', () => {
+      const current = getActiveTab();
+      if (!current) return;
+      current.content = textarea.value;
+      current.updatedAt = Date.now();
+      saveToStorage();
+      updateMetrics(current.content);
+    });
+
+    titleInput?.addEventListener('input', () => {
+      const current = getActiveTab();
+      if (!current) return;
+      current.title = titleInput.value || defaultTabPrefix;
+      current.updatedAt = Date.now();
+      if (pdfTitleInput) pdfTitleInput.value = current.title;
+      saveToStorage();
+      renderTabs();
+    });
+
+    document.getElementById('btn-new-tab')?.addEventListener('click', createNewTab);
+    document.getElementById('btn-multitab-create')?.addEventListener('click', createNewTab);
+
+    // Copy All (Online Clipboard)
+    document.getElementById('btn-copy-all')?.addEventListener('click', async () => {
+      const text = textarea ? textarea.value : '';
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(copiedText);
+      } catch (e) {
+        if (textarea) {
+          textarea.select();
+          document.execCommand('copy');
+          showToast(copiedText);
+        }
+      }
+    });
+
+    // Clear Note
+    document.getElementById('btn-clear-note')?.addEventListener('click', () => {
+      if (!textarea || !textarea.value) return;
+      if (window.confirm(clearConfirmText)) {
+        textarea.value = '';
+        const current = getActiveTab();
+        if (current) {
+          current.content = '';
+          current.updatedAt = Date.now();
+          saveToStorage();
+        }
+        updateMetrics('');
+        renderTabs();
+        textarea.focus();
+      }
+    });
+
+    // Share Link (#note=...)
+    document.getElementById('btn-share-link')?.addEventListener('click', async () => {
+      const current = getActiveTab();
+      if (!current) return;
+      const hash = encodeNoteToHash({ t: current.title, c: current.content });
+      const url = window.location.origin + window.location.pathname + '#note=' + hash;
+      window.history.replaceState(null, '', '#note=' + hash);
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast(shareCopiedText);
+      } catch (e) {
+        showToast(shareCopiedText);
+      }
+    });
+
+    // Open Local File (.TXT, .MD, .HTML)
+    const importInput = document.getElementById('import-file-input');
+    importInput?.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const content = typeof reader.result === 'string' ? reader.result : '';
+        const current = getActiveTab();
+        if (current) {
+          current.title = file.name.replace(/\.[^/.]+$/, '');
+          current.content = content;
+          current.updatedAt = Date.now();
+          saveToStorage();
+          syncEditorWithActiveTab();
+          activateMode('writing');
+        }
+      };
+      reader.readAsText(file);
+      importInput.value = '';
+    });
+
+    // Collapsible Workspace Tools & Modes Tray Toggle
+    const toolsToggleBtn = document.getElementById('btn-toggle-workspace-tools');
+    const toolsTray = document.getElementById('workspace-collapsible-tray');
+    const toolsChevron = document.getElementById('workspace-tools-chevron');
+    const toolsLabel = document.getElementById('workspace-tools-toggle-label');
+
+    function setToolsTrayOpen(open) {
+      if (!toolsTray || !toolsToggleBtn) return;
+      const showLabel = toolsToggleBtn.getAttribute('data-label-show') || 'Tools & Modes';
+      const hideLabel = toolsToggleBtn.getAttribute('data-label-hide') || 'Hide Tools';
+      if (open) {
+        toolsTray.classList.remove('hidden');
+        toolsTray.classList.add('flex');
+        toolsToggleBtn.setAttribute('aria-expanded', 'true');
+        if (toolsChevron) toolsChevron.style.transform = 'rotate(180deg)';
+        if (toolsLabel) toolsLabel.textContent = hideLabel;
+      } else {
+        toolsTray.classList.add('hidden');
+        toolsTray.classList.remove('flex');
+        toolsToggleBtn.setAttribute('aria-expanded', 'false');
+        if (toolsChevron) toolsChevron.style.transform = 'rotate(0deg)';
+        if (toolsLabel) toolsLabel.textContent = showLabel;
+      }
+    }
+
+    toolsToggleBtn?.addEventListener('click', () => {
+      if (!toolsTray) return;
+      const isHidden = toolsTray.classList.contains('hidden');
+      setToolsTrayOpen(isHidden);
+    });
+
+    // Mode Selector Pills Switching
+    const modeButtons = document.querySelectorAll('[data-mode-btn]');
+    const panels = {
+      writing: document.getElementById('mode-panel-writing'),
+      multitab: document.getElementById('mode-panel-multitab'),
+      pdf: document.getElementById('mode-panel-pdf'),
+      tools: document.getElementById('mode-panel-tools'),
+      draw: document.getElementById('mode-panel-draw'),
+    };
+
+    function activateMode(modeKey) {
+      if (modeKey !== 'writing') {
+        setToolsTrayOpen(true);
+      }
+      modeButtons.forEach((btn) => {
+        const key = btn.getAttribute('data-mode-btn');
+        const isSelected = key === modeKey;
+        btn.setAttribute('aria-selected', String(isSelected));
+        if (isSelected) {
+          btn.className =
+            'mode-pill-btn active-mode-pill group flex shrink-0 items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#167D8D] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] shadow-sm transition-all duration-150';
+        } else {
+          btn.className =
+            'mode-pill-btn group flex shrink-0 items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#B9E4E8]/60 dark:bg-[#0C293F] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF] transition-all duration-150';
+        }
+      });
+
+      Object.entries(panels).forEach(([k, el]) => {
+        if (!el) return;
+        if (k === modeKey) {
+          el.classList.remove('hidden');
+          el.classList.add('flex');
+        } else {
+          el.classList.add('hidden');
+          el.classList.remove('flex');
+        }
+      });
+
+      if (modeKey === 'draw') {
+        resizeCanvasIfNeeded();
+      } else if (modeKey === 'multitab') {
+        renderTabs();
+      }
+    }
+
+    modeButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-mode-btn');
+        if (key) activateMode(key);
+      });
+    });
+
+    // Word Counter & Text Transformation Tools
+    document.querySelectorAll('[data-transform]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (!textarea) return;
+        const type = btn.getAttribute('data-transform');
+        let val = textarea.value;
+        if (!val) return;
+
+        switch (type) {
+          case 'upper':
+            val = val.toUpperCase();
+            break;
+          case 'lower':
+            val = val.toLowerCase();
+            break;
+          case 'title':
+            val = val.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+            break;
+          case 'sentence':
+            val = val.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, (c) => c.toUpperCase());
+            break;
+          case 'trim':
+            val = val.replace(/[ \t]+/g, ' ').replace(/^ +| +$/gm, '');
+            break;
+          case 'blanklines':
+            val = val
+              .split(/\r?\n/)
+              .filter((line) => line.trim().length > 0)
+              .join('\n');
+            break;
+          case 'sortaz':
+            val = val.split(/\r?\n/).sort((a, b) => a.localeCompare(b)).join('\n');
+            break;
+          case 'sortza':
+            val = val.split(/\r?\n/).sort((a, b) => b.localeCompare(a)).join('\n');
+            break;
+          case 'dedupe':
+            val = Array.from(new Set(val.split(/\r?\n/))).join('\n');
+            break;
+        }
+
+        textarea.value = val;
+        const current = getActiveTab();
+        if (current) {
+          current.content = val;
+          current.updatedAt = Date.now();
+          saveToStorage();
+        }
+        updateMetrics(val);
+        showToast('✓ Text Updated!');
+      });
+    });
+
+    // Find & Replace
+    document.getElementById('btn-tool-replace-all')?.addEventListener('click', () => {
+      const findEl = document.getElementById('tool-find-input');
+      const repEl = document.getElementById('tool-replace-input');
+      if (!findEl || !repEl || !textarea) return;
+      const findStr = findEl.value;
+      if (!findStr) return;
+      const repStr = repEl.value || '';
+      const updated = textarea.value.split(findStr).join(repStr);
+      textarea.value = updated;
+      const current = getActiveTab();
+      if (current) {
+        current.content = updated;
+        current.updatedAt = Date.now();
+        saveToStorage();
+      }
+      updateMetrics(updated);
+      showToast('✓ Replaced All!');
+    });
+
+    // HTML5 Sketch / Draw Pad Engine
+    const canvas = document.getElementById('purenote-draw-canvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+    let isDrawing = false;
+    let drawColor = '#071B2B';
+    let drawSize = 4;
+    let isEraser = false;
+    const undoStack = [];
+
+    function saveCanvasState() {
+      if (!canvas) return;
+      try {
+        const dataUrl = canvas.toDataURL('image/png');
+        undoStack.push(dataUrl);
+        if (undoStack.length > 20) undoStack.shift();
+        localStorage.setItem(STORAGE_KEY_CANVAS, dataUrl);
+      } catch (e) {}
+    }
+
+    function resizeCanvasIfNeeded() {
+      if (!canvas || !ctx) return;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      if (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height)) {
+        const savedData = localStorage.getItem(STORAGE_KEY_CANVAS);
+        canvas.width = Math.floor(rect.width);
+        canvas.height = Math.floor(rect.height);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (savedData) {
+          const img = new Image();
+          img.onload = () => {
+            ctx.drawImage(img, 0, 0);
+          };
+          img.src = savedData;
+        }
+      }
+    }
+
+    if (canvas && ctx) {
+      const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top,
+        };
+      };
+
+      const startDraw = (e) => {
+        isDrawing = true;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+      };
+
+      const moveDraw = (e) => {
+        if (!isDrawing) return;
+        if (e.cancelable) e.preventDefault();
+        const pos = getPos(e);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = isEraser ? drawSize * 3 : drawSize;
+        ctx.strokeStyle = isEraser ? '#FFFFFF' : drawColor;
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+      };
+
+      const endDraw = () => {
+        if (!isDrawing) return;
+        isDrawing = false;
+        ctx.closePath();
+        saveCanvasState();
+      };
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', moveDraw);
+      window.addEventListener('mouseup', endDraw);
+
+      canvas.addEventListener('touchstart', startDraw, { passive: false });
+      canvas.addEventListener('touchmove', moveDraw, { passive: false });
+      window.addEventListener('touchend', endDraw);
+    }
+
+    const penBtn = document.getElementById('draw-tool-pen');
+    const eraserBtn = document.getElementById('draw-tool-eraser');
+
+    penBtn?.addEventListener('click', () => {
+      isEraser = false;
+      penBtn.className = 'rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] transition-colors';
+      if (eraserBtn) eraserBtn.className = 'rounded-xl border-2 border-[#167D8D] bg-[#B9E4E8]/50 dark:bg-[#071B2B] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] transition-colors';
+    });
+
+    eraserBtn?.addEventListener('click', () => {
+      isEraser = true;
+      eraserBtn.className = 'rounded-xl border-2 border-[#167D8D] bg-[#167D8D] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#FFFFFF] transition-colors';
+      if (penBtn) penBtn.className = 'rounded-xl border-2 border-[#167D8D] bg-[#B9E4E8]/50 dark:bg-[#071B2B] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-[#071B2B] dark:text-[#EEEEEE] transition-colors';
+    });
+
+    document.querySelectorAll('[data-draw-color]').forEach((swatch) => {
+      swatch.addEventListener('click', () => {
+        isEraser = false;
+        drawColor = swatch.getAttribute('data-draw-color') || '#071B2B';
+        document.querySelectorAll('[data-draw-color]').forEach((s) => s.classList.remove('ring-2', 'ring-[#167D8D]'));
+        swatch.classList.add('ring-2', 'ring-[#167D8D]');
+        penBtn?.click();
+      });
+    });
+
+    document.getElementById('draw-size-slider')?.addEventListener('input', (e) => {
+      drawSize = Number(e.target.value) || 4;
+    });
+
+    document.getElementById('draw-btn-undo')?.addEventListener('click', () => {
+      if (!canvas || !ctx || undoStack.length === 0) return;
+      undoStack.pop();
+      const prev = undoStack[undoStack.length - 1];
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (prev) {
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+          localStorage.setItem(STORAGE_KEY_CANVAS, prev);
+        };
+        img.src = prev;
+      } else {
+        localStorage.removeItem(STORAGE_KEY_CANVAS);
+      }
+    });
+
+    document.getElementById('draw-btn-clear')?.addEventListener('click', () => {
+      if (!canvas || !ctx) return;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      localStorage.removeItem(STORAGE_KEY_CANVAS);
+      undoStack.length = 0;
+    });
+
+    document.getElementById('draw-btn-download')?.addEventListener('click', () => {
+      if (!canvas) return;
+      const link = document.createElement('a');
+      link.download = (getActiveTab()?.title || 'purenote-sketch') + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    // 1-Click Exports (.TXT, .HTML, .MD, and Print-Ready Notepad to PDF)
+    function downloadBlob(filename, content, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function getSafeFilename(ext) {
+      const raw = (getActiveTab()?.title || 'purenote').trim();
+      const safe = raw.replace(/[^a-zA-Z0-9\u00C0-\u024F\u0400-\u04FF\u4E00-\u9FFF\u3040-\u30FF_-]+/g, '-').replace(/^-+|-+$/g, '') || 'purenote';
+      return safe + '.' + ext;
+    }
+
+    // Export Format & Live Word Count Popover Toggle
+    const exportToggleBtn = document.getElementById('btn-export-menu-toggle');
+    const exportMenu = document.getElementById('export-format-menu');
+    const exportWrapper = document.getElementById('export-dropdown-wrapper');
+    const exportChevron = document.getElementById('export-menu-chevron');
+
+    function setExportMenuOpen(open) {
+      if (!exportMenu || !exportToggleBtn) return;
+      if (open) {
+        exportMenu.classList.remove('hidden');
+        exportToggleBtn.setAttribute('aria-expanded', 'true');
+        if (exportChevron) exportChevron.style.transform = 'rotate(180deg)';
+      } else {
+        exportMenu.classList.add('hidden');
+        exportToggleBtn.setAttribute('aria-expanded', 'false');
+        if (exportChevron) exportChevron.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    exportToggleBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!exportMenu) return;
+      setExportMenuOpen(exportMenu.classList.contains('hidden'));
+    });
+
+    document.addEventListener('click', (e) => {
+      if (exportWrapper && !exportWrapper.contains(e.target)) {
+        setExportMenuOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        setExportMenuOpen(false);
+      }
+    });
+
+    document.getElementById('btn-export-txt')?.addEventListener('click', () => {
+      const content = textarea ? textarea.value : '';
+      downloadBlob(getSafeFilename('txt'), content, 'text/plain;charset=utf-8');
+      setExportMenuOpen(false);
+    });
+
+    document.getElementById('btn-export-md')?.addEventListener('click', () => {
+      const title = getActiveTab()?.title || 'Note';
+      const body = textarea ? textarea.value : '';
+      const md = `# ${title}\n\n${body}\n`;
+      downloadBlob(getSafeFilename('md'), md, 'text/markdown;charset=utf-8');
+      setExportMenuOpen(false);
+    });
+
+    document.getElementById('btn-export-html')?.addEventListener('click', () => {
+      const title = (getActiveTab()?.title || 'PureNote Document').replace(/</g, '&lt;');
+      const body = (textarea ? textarea.value : '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\r?\n/g, '<br>\n');
+      const htmlDoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #071B2B; }
+  h1 { border-bottom: 2px solid #167D8D; padding-bottom: 10px; }
+</style>
+</head>
+<body>
+  <h1>${title}</h1>
+  <div>${body}</div>
+</body>
+</html>`;
+      downloadBlob(getSafeFilename('html'), htmlDoc, 'text/html;charset=utf-8');
+      setExportMenuOpen(false);
+    });
+
+    // Notepad to PDF Generator
+    function generatePrintReadyPdf() {
+      setExportMenuOpen(false);
+      const current = getActiveTab();
+      const docTitle = (pdfTitleInput && pdfTitleInput.value) || current?.title || 'PureNote Document';
+      const fontSelect = document.getElementById('pdf-font-family');
+      const fontChoice = fontSelect ? fontSelect.value : 'sans';
+      const includeDate = document.getElementById('pdf-opt-date')?.checked ?? true;
+      const includeMetrics = document.getElementById('pdf-opt-metrics')?.checked ?? true;
+      const includeLines = document.getElementById('pdf-opt-lines')?.checked ?? false;
+      const includeSketch = document.getElementById('pdf-opt-sketch')?.checked ?? false;
+
+      const fontStack =
+        fontChoice === 'serif'
+          ? 'Georgia, Cambria, "Times New Roman", Times, serif'
+          : fontChoice === 'mono'
+            ? '"JetBrains Mono", Consolas, Monaco, monospace'
+            : 'Inter, system-ui, -apple-system, sans-serif';
+
+      const rawText = textarea ? textarea.value : '';
+      const escapedLines = rawText
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .split(/\r?\n/);
+
+      const formattedBody = includeLines
+        ? escapedLines
+            .map(
+              (line, idx) =>
+                `<div style="display:flex;gap:14px;"><span style="color:#167D8D;user-select:none;min-width:28px;text-align:right;font-family:monospace;">${idx + 1}.</span><span style="flex:1;white-space:pre-wrap;word-break:break-word;">${line || ' '}</span></div>`
+            )
+            .join('')
+        : `<div style="white-space:pre-wrap;word-break:break-word;">${escapedLines.join('\n')}</div>`;
+
+      const wordsCount = rawText.trim() ? rawText.trim().split(/\s+/).filter(Boolean).length : 0;
+      const charsCount = rawText.length;
+      const sketchData = includeSketch ? localStorage.getItem(STORAGE_KEY_CANVAS) : null;
+
+      const printWin = window.open('', '_blank', 'width=900,height=750');
+      if (!printWin) {
+        window.print();
+        return;
+      }
+
+      printWin.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>${docTitle.replace(/</g, '&lt;')}</title>
+  <style>
+    @page { margin: 20mm; }
+    body {
+      font-family: ${fontStack};
+      color: #071B2B;
+      line-height: 1.65;
+      font-size: 13pt;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      border-bottom: 2px solid #167D8D;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 20pt;
+      color: #071B2B;
+    }
+    .header .date {
+      font-size: 10pt;
+      color: #167D8D;
+    }
+    .footer {
+      margin-top: 28px;
+      border-top: 1px solid #B9E4E8;
+      padding-top: 10px;
+      font-size: 9.5pt;
+      color: #167D8D;
+      display: flex;
+      justify-content: space-between;
+    }
+    .sketch-box {
+      margin-top: 24px;
+      border: 1px solid #167D8D;
+      border-radius: 8px;
+      padding: 12px;
+      page-break-inside: avoid;
+    }
+    .sketch-box img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>${docTitle.replace(/</g, '&lt;')}</h1>
+    ${includeDate ? `<span class="date">${new Date().toLocaleString()}</span>` : ''}
+  </div>
+  <main>${formattedBody}</main>
+  ${sketchData ? `<div class="sketch-box"><img src="${sketchData}" alt="Sketch" /></div>` : ''}
+  ${
+    includeMetrics
+      ? `<div class="footer"><span>Words: ${wordsCount} | Characters: ${charsCount} | Lines: ${escapedLines.length}</span><span>PureNote — purenote.github.io</span></div>`
+      : ''
+  }
+  <script>
+    window.onload = function() {
+      setTimeout(function() {
+        window.print();
+      }, 200);
+    };
+  <\/script>
+</body>
+</html>`);
+      printWin.document.close();
+    }
+
+    document.getElementById('btn-export-pdf')?.addEventListener('click', generatePrintReadyPdf);
+    document.getElementById('btn-pdf-studio-generate')?.addEventListener('click', generatePrintReadyPdf);
+
+    // Boot workspace
+    loadFromStorage();
+    applyFontSize();
+    syncEditorWithActiveTab();
+  })();
+</script>

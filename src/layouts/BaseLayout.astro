@@ -1,0 +1,135 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SchemaJsonLd from '../components/SchemaJsonLd.astro';
+import {
+  languages,
+  localeList,
+  useTranslations,
+  getLocalizedPath,
+  type Locale,
+} from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+  title?: string;
+  description?: string;
+  currentPath?: string;
+}
+
+const { lang, title, description, currentPath = '' } = Astro.props;
+const t = useTranslations(lang);
+
+const pageTitle = title || t('meta.title');
+const pageDesc = description || t('meta.description');
+const siteOrigin = 'https://purenote.github.io';
+const canonicalUrl = new URL(getLocalizedPath(lang, currentPath), siteOrigin).toString();
+const ogImageUrl = `${siteOrigin}/og-image.svg`;
+const currentOgLocale = languages[lang].hreflang.replace('-', '_');
+const alternateOgLocales = localeList
+  .filter((loc) => loc !== lang)
+  .map((loc) => languages[loc].hreflang.replace('-', '_'));
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <!-- Google Tag Manager (GTM-K586P9HL) & Google Analytics 4 (G-G9V3J96C86) -->
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-K586P9HL"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G9V3J96C86"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G9V3J96C86');
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <meta name="keywords" content={t('meta.keywords')} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Self-Referencing Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Bulletproof Sitemap Link for Google Search Console & Crawlers -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://purenote.github.io/sitemap.xml" />
+
+    <!-- Hreflang Network for All 8 Supported Locales + x-default -->
+    <link rel="alternate" hreflang="x-default" href={new URL(getLocalizedPath('en', currentPath), siteOrigin).toString()} />
+    {
+      localeList.map((loc) => (
+        <link
+          rel="alternate"
+          hreflang={loc}
+          href={new URL(getLocalizedPath(loc, currentPath), siteOrigin).toString()}
+        />
+      ))
+    }
+
+    <!-- Favicon & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#167D8D" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="PureNote" />
+
+    <!-- Open Graph Metadata (with Alternates for All 8 Languages) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PureNote" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={pageTitle} />
+    <meta property="og:locale" content={currentOgLocale} />
+    {
+      alternateOgLocales.map((altLoc) => (
+        <meta property="og:locale:alternate" content={altLoc} />
+      ))
+    }
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Strict Zero-Fake-Rating JSON-LD Schema (WebApplication, HowTo, FAQPage, BreadcrumbList) -->
+    <SchemaJsonLd lang={lang} canonicalUrl={canonicalUrl} description={pageDesc} />
+
+    <!-- Instant Theme Initialization (Light Mode Default #EEEEEE, Dark Mode #071B2B) -->
+    <script is:inline>
+      (function () {
+        try {
+          const savedTheme = localStorage.getItem('purenote_theme');
+          if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+          });
+        }
+      })();
+    </script>
+  </head>
+  <body class="min-h-dvh flex flex-col bg-[#EEEEEE] dark:bg-[#071B2B] text-[#071B2B] dark:text-[#EEEEEE] antialiased selection:bg-[#B9E4E8] selection:text-[#071B2B]">
+    <Header lang={lang} currentPath={currentPath} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

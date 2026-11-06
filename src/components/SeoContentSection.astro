@@ -1,0 +1,187 @@
+---
+import {
+  useTranslations,
+  getLocalizedPath,
+  localizedFeatures,
+  localizedFaqs,
+  localizedHowTo,
+  localizedComparison,
+  type Locale,
+} from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const features = localizedFeatures[lang] || localizedFeatures.en;
+const faqs = localizedFaqs[lang] || localizedFaqs.en;
+const howToSteps = localizedHowTo[lang] || localizedHowTo.en;
+const comparisonRows = localizedComparison[lang] || localizedComparison.en;
+---
+
+<div class="no-print mx-auto max-w-7xl space-y-16 px-4 py-12 sm:px-6 lg:px-8">
+  <!-- 1. Visual Breadcrumb Navigation (1:1 Match with BreadcrumbList JSON-LD) -->
+  <nav
+    aria-label="Breadcrumb"
+    class="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] px-4 py-2.5 text-xs sm:text-sm font-extrabold text-[#167D8D] dark:text-[#B9E4E8] shadow-sm"
+  >
+    <ol class="flex flex-wrap items-center gap-2">
+      <li class="flex items-center gap-2">
+        <a href={getLocalizedPath(lang, '')} class="hover:underline text-[#071B2B] dark:text-[#EEEEEE]">
+          {t('breadcrumb.home')}
+        </a>
+        <span aria-hidden="true" class="text-[#167D8D]">›</span>
+      </li>
+      <li class="flex items-center gap-2">
+        <a href="#productivity-tools" class="hover:underline">
+          {t('breadcrumb.tools')}
+        </a>
+        <span aria-hidden="true" class="text-[#167D8D]">›</span>
+      </li>
+      <li aria-current="page" class="text-[#071B2B] dark:text-[#EEEEEE]">
+        {t('breadcrumb.notepad')}
+      </li>
+    </ol>
+  </nav>
+
+  <!-- 2. HowTo Guide Section (1:1 Match with HowTo JSON-LD) -->
+  <section aria-labelledby="howto-heading" class="rounded-3xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-6 sm:p-10 shadow-sm">
+    <div class="mb-8 text-center">
+      <h2 id="howto-heading" class="text-2xl sm:text-3xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+        {t('howto.title')}
+      </h2>
+      <p class="mt-2 mx-auto max-w-2xl text-sm sm:text-base font-medium text-[#167D8D] dark:text-[#B9E4E8]">
+        {t('howto.subtitle')}
+      </p>
+    </div>
+
+    <ol class="grid grid-cols-1 gap-5 md:grid-cols-3">
+      {
+        howToSteps.map((step, index) => (
+          <li
+            id={`step-${index + 1}`}
+            class="flex flex-col justify-between rounded-2xl border-2 border-[#167D8D] bg-[#B9E4E8]/55 dark:bg-[#0F324D] p-5"
+          >
+            <div>
+              <div class="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#167D8D] bg-[#167D8D] text-base font-black text-[#FFFFFF]">
+                {index + 1}
+              </div>
+              <h3 class="mb-2 text-lg font-black text-[#071B2B] dark:text-[#EEEEEE]">
+                {step.name}
+              </h3>
+              <p class="text-sm sm:text-base font-medium leading-relaxed text-[#071B2B]/90 dark:text-[#EEEEEE]/90">
+                {step.text}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- 3. Semantic Feature Cards Section -->
+  <section id="productivity-tools" aria-labelledby="features-heading">
+    <div class="mb-8 text-center">
+      <h2 id="features-heading" class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+        {t('section.featuresTitle')}
+      </h2>
+      <p class="mt-2 mx-auto max-w-3xl text-base sm:text-lg font-medium text-[#167D8D] dark:text-[#B9E4E8]">
+        {t('section.featuresSubtitle')}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        features.map((feat, idx) => (
+          <article class="flex flex-col justify-between rounded-3xl border-2 border-[#167D8D] bg-[#B9E4E8] dark:bg-[#0C293F] p-6 shadow-sm transition-transform duration-200 hover:-translate-y-1">
+            <div>
+              <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0F324D] text-lg font-black text-[#071B2B] dark:text-[#B9E4E8]">
+                0{idx + 1}
+              </div>
+              <h3 class="mb-2 text-xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+                {feat.title}
+              </h3>
+              <p class="text-sm sm:text-base font-medium leading-relaxed text-[#071B2B]/90 dark:text-[#EEEEEE]/90">
+                {feat.desc}
+              </p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 4. Feature & Privacy Comparison Table -->
+  <section aria-labelledby="comparison-heading" class="rounded-3xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-6 sm:p-10 shadow-sm">
+    <div class="mb-8 text-center">
+      <h2 id="comparison-heading" class="text-2xl sm:text-3xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+        {t('comparison.title')}
+      </h2>
+      <p class="mt-2 mx-auto max-w-2xl text-sm sm:text-base font-medium text-[#167D8D] dark:text-[#B9E4E8]">
+        {t('comparison.subtitle')}
+      </p>
+    </div>
+
+    <div class="overflow-x-auto rounded-2xl border-2 border-[#167D8D]">
+      <table class="w-full min-w-[640px] border-collapse text-left text-sm sm:text-base">
+        <thead>
+          <tr class="border-b-2 border-[#167D8D] bg-[#071B2B] text-[#FFFFFF]">
+            <th scope="col" class="px-4 py-3.5 font-extrabold">{t('comparison.colFeature')}</th>
+            <th scope="col" class="px-4 py-3.5 font-extrabold bg-[#167D8D] text-[#FFFFFF]">{t('comparison.colPureNote')}</th>
+            <th scope="col" class="px-4 py-3.5 font-bold text-[#B9E4E8]">{t('comparison.colCloud')}</th>
+            <th scope="col" class="px-4 py-3.5 font-bold text-[#B9E4E8]">{t('comparison.colDesktop')}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#167D8D]/40">
+          {
+            comparisonRows.map((row) => (
+              <tr class="bg-[#FFFFFF] dark:bg-[#0F324D] hover:bg-[#B9E4E8]/30 dark:hover:bg-[#0C293F] transition-colors">
+                <th scope="row" class="px-4 py-3.5 font-extrabold text-[#071B2B] dark:text-[#EEEEEE]">
+                  {row.feature}
+                </th>
+                <td class="px-4 py-3.5 font-black text-[#071B2B] dark:text-[#FFFFFF] bg-[#B9E4E8]/45 dark:bg-[#167D8D]/35">
+                  {row.purenote}
+                </td>
+                <td class="px-4 py-3.5 font-medium text-[#071B2B]/80 dark:text-[#EEEEEE]/80">
+                  {row.cloud}
+                </td>
+                <td class="px-4 py-3.5 font-medium text-[#071B2B]/80 dark:text-[#EEEEEE]/80">
+                  {row.desktop}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 5. Localized FAQ Section (1:1 Match with FAQPage JSON-LD) -->
+  <section aria-labelledby="faq-heading" class="rounded-3xl border-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#0C293F] p-6 sm:p-10 shadow-sm">
+    <div class="mb-8 text-center">
+      <h2 id="faq-heading" class="text-2xl sm:text-3xl font-black text-[#071B2B] dark:text-[#EEEEEE]">
+        {t('section.faqTitle')}
+      </h2>
+      <p class="mt-2 mx-auto max-w-2xl text-sm sm:text-base font-medium text-[#167D8D] dark:text-[#B9E4E8]">
+        {t('section.faqSubtitle')}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {
+        faqs.map((item) => (
+          <article class="rounded-2xl border-2 border-[#167D8D] bg-[#EEEEEE]/70 dark:bg-[#0F324D] p-5">
+            <h3 class="mb-2 text-base sm:text-lg font-extrabold text-[#071B2B] dark:text-[#EEEEEE]">
+              {item.q}
+            </h3>
+            <p class="text-sm sm:text-base font-medium leading-relaxed text-[#071B2B]/90 dark:text-[#EEEEEE]/85">
+              {item.a}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</div>

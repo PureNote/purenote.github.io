@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Core Palette Tokens */
+  --deep-abyssal-navy: #071B2B;
+  --oceanic-teal-cyan: #167D8D;
+  --glacial-ice-aqua: #B9E4E8;
+  --soft-platinum-gray: #EEEEEE;
+  --pure-paper-white: #FFFFFF;
+
+  /* Light Mode Semantic Tokens (Default) */
+  --bg-primary: #EEEEEE;
+  --bg-surface-card: #B9E4E8;
+  --workspace-box-bg: #FFFFFF;
+  --primary-action-button: #167D8D;
+  --primary-action-hover: #071B2B;
+  --primary-action-text: #FFFFFF;
+  --secondary-accent-surface: #B9E4E8;
+  --highlight-pill-badge: #B9E4E8;
+  --border-color: #167D8D;
+  --text-primary: #071B2B;
+  --text-secondary: #167D8D;
+}
+
+html.dark {
+  /* Dark Mode Semantic Tokens */
+  --bg-primary: #071B2B;
+  --bg-surface-card: #0C293F;
+  --workspace-box-bg: #0F324D;
+  --primary-action-button: #B9E4E8;
+  --primary-action-hover: #167D8D;
+  --primary-action-text: #071B2B;
+  --secondary-accent-surface: #167D8D;
+  --highlight-pill-badge: #167D8D;
+  --border-color: #167D8D;
+  --text-primary: #EEEEEE;
+  --text-secondary: #B9E4E8;
+}
+
+@layer base {
+  html {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #B9E4E8;
+    color: #071B2B;
+  }
+
+  html.dark ::selection {
+    background-color: #167D8D;
+    color: #FFFFFF;
+  }
+}
+
+/* Smooth Workspace & Mode Animations */
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes softPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(22, 125, 141, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(185, 228, 232, 0);
+  }
+}
+
+.animate-panel-enter {
+  animation: fadeSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.autosave-pulse-dot {
+  animation: softPulseGlow 2.2s infinite ease-in-out;
+}
+
+/* Custom Editor Focus Ring */
+.purenote-editor-textarea {
+  border: 2px solid #167D8D;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, font-size 0.15s ease;
+}
+
+.purenote-editor-textarea:focus {
+  outline: none;
+  border-color: #167D8D;
+  box-shadow: 0 0 0 4px rgba(185, 228, 232, 0.75);
+}
+
+html.dark .purenote-editor-textarea:focus {
+  border-color: #B9E4E8;
+  box-shadow: 0 0 0 4px rgba(22, 125, 141, 0.65);
+}
+
+/* Custom Scrollbar for Editor and Tabs */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(7, 27, 43, 0.06);
+  border-radius: 9999px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #167D8D;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #071B2B;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #B9E4E8;
+}
+
+/* Print / Notepad to PDF Media Query */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  body,
+  html {
+    background: #FFFFFF !important;
+    color: #071B2B !important;
+  }
+}

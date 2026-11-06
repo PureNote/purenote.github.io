@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroNotepad from '../../components/HeroNotepad.astro';
+import SeoContentSection from '../../components/SeoContentSection.astro';
+import { localeList, defaultLang, type Locale } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return localeList
+    .filter((lang) => lang !== defaultLang)
+    .map((lang) => ({
+      params: { lang },
+      props: { lang },
+    }));
+}
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+---
+
+<BaseLayout lang={lang} currentPath="">
+  <HeroNotepad lang={lang} />
+  <SeoContentSection lang={lang} />
+</BaseLayout>

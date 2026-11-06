@@ -1,0 +1,67 @@
+---
+import { languages, localeList, useTranslations, getLocalizedPath, type Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="no-print border-t-2 border-[#167D8D] bg-[#FFFFFF] dark:bg-[#071B2B] py-10 transition-colors duration-200">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
+      <!-- Brand & Privacy Badge -->
+      <div class="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl font-black text-[#071B2B] dark:text-[#EEEEEE]">{t('nav.brand')}</span>
+          <span class="rounded-full border border-[#167D8D] bg-[#B9E4E8] dark:bg-[#167D8D] px-3 py-0.5 text-xs font-extrabold text-[#071B2B] dark:text-[#FFFFFF]">
+            {t('footer.privacyBadge')}
+          </span>
+        </div>
+        <p class="text-sm font-medium text-[#167D8D] dark:text-[#B9E4E8]">
+          {t('footer.builtWith')}
+        </p>
+      </div>
+
+      <!-- Support the Developer CTA -->
+      <a
+        href="https://kisharadilshan.gumroad.com/coffee"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-2xl border-2 border-[#167D8D] bg-[#167D8D] px-5 py-3 text-sm font-extrabold text-[#FFFFFF] shadow-md hover:bg-[#071B2B] hover:border-[#071B2B] dark:hover:border-[#B9E4E8] transition-all"
+      >
+        <span>☕ {t('nav.supportCta')}</span>
+      </a>
+    </div>
+
+    <!-- 8-Language Switcher Bar -->
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-2 border-t border-[#167D8D]/30 pt-6">
+      {
+        localeList.map((loc) => {
+          const info = languages[loc];
+          const isCurrent = loc === lang;
+          return (
+            <a
+              href={getLocalizedPath(loc, '')}
+              class:list={[
+                'rounded-xl border border-[#167D8D] px-3 py-1.5 text-xs font-extrabold transition-colors',
+                isCurrent
+                  ? 'bg-[#167D8D] text-[#FFFFFF]'
+                  : 'bg-[#B9E4E8]/40 dark:bg-[#0C293F] text-[#071B2B] dark:text-[#EEEEEE] hover:bg-[#167D8D] hover:text-[#FFFFFF]',
+              ]}
+            >
+              {info.flag} {info.nativeName}
+            </a>
+          );
+        })
+      }
+    </div>
+
+    <div class="mt-6 text-center text-xs font-bold text-[#167D8D] dark:text-[#B9E4E8]">
+      © {year} {t('nav.brand')} (purenote.github.io). {t('footer.rights')}
+    </div>
+  </div>
+</footer>
